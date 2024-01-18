@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  # Configuración del contenedor de la aplicación que se conecta a MongoDB
+  appwritertomongocontainer:
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev #Dockerfile de la application
+    ports:
+      - "3000:3000"  # Mapeo de puertos para acceder a la aplicación desde el host
+    links:
+      - mongocontainer  # Conexión con el contenedor de MongoDB
+    volumes:
+      - .:/home/app  # Volumen para montar el código fuente en el contenedor
+    
+  # Configuración del contenedor de MongoDB
+  mongocontainer:
+    image: mongo
+    ports:
+      - "27017:27017"  # Mapeo de puertos para acceder a MongoDB desde el host
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=gabriel
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    volumes:
+      - mongo-data:/data/db  # Volumen para persistir los datos de MongoDB  
+
+# Definición de volúmenes
+volumes: 
+  mongo-data:  # Volumen para los datos de MongoDB
+  docker-data:  # Volumen genérico
+  mongocontainer:  # Volumen para el contenedor de MongoDB
+
+# Comando recomendado para ejecutar el contenedor
+# docker-compose -f docker-compose-dev.yml up 
+# Se encargará de crear las imágenes y conectarlos en su propia red

@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  appwritertomongocontainer:
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    links:
+      - mongocontainer
+    volumes:
+      - .:/home/app  
+    
+  mongocontainer:
+    image: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=gabriel
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    volumes:
+      - mongo-data:/data/db  
+
+volumes: 
+  mongo-data:
+  docker-data:
+  mongocontainer:
+
+# docker compose -f docker-compose-dev.yml up 
+# se encargara de crear las iamgenes y conectarlos en su propia red
